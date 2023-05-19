@@ -77,21 +77,6 @@ async function detectAllLandmarks(newKeypoints, similarityThreshold) {
 }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 //@route Post api/Facelandmark
 //desc post route
 //@access Public
@@ -126,7 +111,7 @@ router.post('/',
       //   }
       // }
 
-      res.json("process");
+      //res.json("process");
     } catch (err) {
       console.log(err)
       res.status(500).json({ errors: [{ message: err.message }] });
