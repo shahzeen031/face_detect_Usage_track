@@ -1,0 +1,88 @@
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+.container {
+  position: relative;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.button-container {
+  
+    text-align: center;
+    margin: 20px;
+  
+}
+
+.cool-button {
+  display: inline-block;
+  padding: 10px 20px;
+  background-color: #4CAF50;
+  color: #fff;
+  margin: 5px;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.4);
+  transition: background-color 0.3s ease;
+}
+
+.cool-button:hover {
+  background-color: #f3f8f4;
+  border: #45a049;
+  color: #45a049;
+}
+.cool-button2 {
+  display: inline-block;
+  padding: 10px 20px;
+  background-color: #cc542f;
+  color: #fff;
+  margin: 5px;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.4);
+  transition: background-color 0.3s ease;
+}
+
+.cool-button2:hover {
+  background-color: #f3f8f4;
+  border: #cc542f;
+  color: #cc542f;
+}
+
+.webcam-button,
+.button {
+  display: block;
+  margin: 0 auto;
+}
+
+.heading {
+  text-align: center;
+  margin-top: 20px;
+}
+
+
+
+
+
+
+
+
+
