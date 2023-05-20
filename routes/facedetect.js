@@ -89,7 +89,7 @@ router.post('/',
 
     try {
      
-   let x= await detectAllLandmarks(landmarks,0.6)
+   let x= await detectAllLandmarks(landmarks,0.8)
    
         if (x[0]) {
           console.log("done")
