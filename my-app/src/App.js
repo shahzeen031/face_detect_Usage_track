@@ -3,19 +3,13 @@ import Webcam from 'react-webcam';
 import axios from "axios";
 
 function App() {
-  const [keypoints, setKeypoints] = useState([]);
+
   const [Appreance, setAppreance] = useState('');
-  const [loading, setloading] = useState(false);
   const [capturedImage, setCapturedImage] = useState(null);
   const [name, setName] = useState('');
   const webcamRef = useRef(null);
 
-  const handleImageCapture = () => {
-    const imageSrc = webcamRef.current.getScreenshot();
-  
-    setCapturedImage(imageSrc);
-    // Do something with the captured image
-  };
+
   const handleNameChange = (e) => {
     setName(e.target.value);
   };
@@ -72,6 +66,7 @@ const resizedImage = await resizeImage(imageSrc, 800, 600);
 
 const formData = new FormData();
 formData.append('personName', name);
+
 formData.append('image', resizedImage, { filename: 'image.jpg' });
 
 

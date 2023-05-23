@@ -65,7 +65,8 @@ router.post('/', upload.single('image'), async (req, res) => {
     try {
 
         const { buffer } = req.file;
-        const personName = req.body.personName;
+        let personName = req.body.personName;
+        personName= personName.replace(' ', '');
         
         let output = await detectAndRecognizeFaces(buffer)
 

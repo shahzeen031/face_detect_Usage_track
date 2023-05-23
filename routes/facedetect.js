@@ -1,17 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const Facelandmark = require('../models/Facelandmarks');
-const faceapi = require('face-api.js');
-const canvas = require('canvas');
-const { Canvas, Image, ImageData } = canvas;
-faceapi.env.monkeyPatch({ Canvas, Image, ImageData });
 
-async function loadModels() {
-  const MODEL_PATH = '../../weights';
-
-  await faceapi.nets.ssdMobilenetv1.loadFromDisk(MODEL_PATH);
-  await faceapi.nets.faceLandmark68Net.loadFromDisk(MODEL_PATH);
-}
 
 
 async function extractAllLandmarks() {
