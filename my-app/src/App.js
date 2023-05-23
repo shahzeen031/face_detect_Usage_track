@@ -1,171 +1,142 @@
-import { FaceMesh } from "@mediapipe/face_mesh";
-import React, { useRef, useEffect,useState } from "react";
-import * as Facemesh from "@mediapipe/face_mesh";
-import * as cam from "@mediapipe/camera_utils";
-
+import React, { useRef,useState } from "react";
+import Webcam from 'react-webcam';
 import axios from "axios";
 
 function App() {
   const [keypoints, setKeypoints] = useState([]);
-  const [Appreance, setAppreance] = useState(0);
+  const [Appreance, setAppreance] = useState('');
+  const [loading, setloading] = useState(false);
+  const [capturedImage, setCapturedImage] = useState(null);
+  const [name, setName] = useState('');
   const webcamRef = useRef(null);
-  const canvasRef = useRef(null);
-  const connect = window.drawConnectors;
-  const videoRef = useRef(null);
-  const cameraRef = useRef(null);
 
-  const startRecording = async () => {
-    
-    const stream = await navigator.mediaDevices.getUserMedia({ video: true });
-    videoRef.current.srcObject = stream;
-    videoRef.current.play();
-
-    const faceMesh = new FaceMesh({
-      locateFile: (file) => {
-        return `https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/${file}`;
-      },
-    });
-
-    faceMesh.setOptions({
-      maxNumFaces: 1,
-      minDetectionConfidence: 0.5,
-      minTrackingConfidence: 0.5,
-    });
-
-    faceMesh.onResults(onResults);
-
-    cameraRef.current = new cam.Camera(videoRef.current, {
-      onFrame: async () => {
-        await faceMesh.send({ image: videoRef.current });
-      },
-      width: 640,
-      height: 480,
-    });
-
-    cameraRef.current.start();
+  const handleImageCapture = () => {
+    const imageSrc = webcamRef.current.getScreenshot();
+  
+    setCapturedImage(imageSrc);
+    // Do something with the captured image
   };
-const Tryagain = async ()=>{
-  window.location.reload(true)
-}
-  const stopRecording = () => {
-    sendKeypoints()
-    if (cameraRef.current) {
-      cameraRef.current.stop();
-      cameraRef.current = null;
-    }
-    if (videoRef.current && videoRef.current.srcObject) {
-      videoRef.current.srcObject.getTracks().forEach((track) => {
-        track.stop();
-      });
-      videoRef.current.srcObject = null;
-    }
+  const handleNameChange = (e) => {
+    setName(e.target.value);
   };
+ // Helper function to resize the image using the HTML Canvas API
+function resizeImage(imageSrc, maxWidth, maxHeight) {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    img.onload = function () {
+      const canvas = document.createElement('canvas');
+      let width = img.width;
+      let height = img.height;
 
-  function onResults(results) {
-    const videoWidth = videoRef.current.videoWidth;
-    const videoHeight = videoRef.current.videoHeight;
-
-    // Set canvas width
-    canvasRef.current.width = videoWidth;
-    canvasRef.current.height = videoHeight;
-
-    const canvasElement = canvasRef.current;
-    const canvasCtx = canvasElement.getContext("2d");
-    canvasCtx.save();
-    canvasCtx.clearRect(0, 0, canvasElement.width, canvasElement.height);
-    canvasCtx.drawImage(
-      results.image,
-      0,
-      0,
-      canvasElement.width,
-      canvasElement.height
-    );
- 
-
-    if (results.multiFaceLandmarks) {
-      for (const landmarks of results.multiFaceLandmarks) {
-        connect(canvasCtx, landmarks, Facemesh.FACEMESH_TESSELATION, {
-          color: "#C0C0C070",
-          lineWidth: 1,
-        });
-        connect(canvasCtx, landmarks, Facemesh.FACEMESH_RIGHT_EYE, {
-          color: "#FF3030",
-        });
-        connect(canvasCtx, landmarks, Facemesh.FACEMESH_RIGHT_EYEBROW, {
-          color: "#FF3030",
-        });
-        connect(canvasCtx, landmarks, Facemesh.FACEMESH_LEFT_EYE, {
-          color: "#30FF30",
-        });
-        connect(canvasCtx, landmarks, Facemesh.FACEMESH_LEFT_EYEBROW, {
-          color: "#30FF30",
-        });
-        connect(canvasCtx, landmarks, Facemesh.FACEMESH_FACE_OVAL, {
-          color: "#E0E0E0",
-        });
-        connect(canvasCtx, landmarks, Facemesh.FACEMESH_LIPS, {
-          color: "#E0E0E0",
-        });
+      if (width > maxWidth) {
+        height = Math.round((height * maxWidth) / width);
+        width = maxWidth;
       }
 
-      // Send keypoints to Node.js API
-      const keypointss = results.multiFaceLandmarks[0];
-     setKeypoints(keypointss)
-    }
+      if (height > maxHeight) {
+        width = Math.round((width * maxHeight) / height);
+        height = maxHeight;
+      }
 
-    canvasCtx.restore();
+      canvas.width = width;
+      canvas.height = height;
+
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(img, 0, 0, width, height);
+
+      canvas.toBlob((blob) => {
+        resolve(blob);
+      }, 'image/jpeg');
+    };
+
+    img.onerror = function (error) {
+      reject(error);
+    };
+
+    img.src = imageSrc;
+  });
+}
+  
+  const Tryagain = async ()=>{
+    window.location.reload(true)
   }
 
-  const sendKeypoints = async () => {
-    try {
-      let face = [];
+  const handleImageUpload = async () => {
+    const imageSrc = await webcamRef.current.getScreenshot();
 
-if (keypoints) {
-  face = keypoints.map(res => [res.x, res.y, res.z]).flat();
-   //face= JSON.stringify(face)
-
-} else {
-  face = new Array(1404).fill(0);
-}
-
-      const response = await axios.post(" http://localhost:5001/api/face", {
-        keypoints: face,
-      });
+   setCapturedImage(imageSrc);
    
-       setAppreance(response.data)
-      // Handle the response and draw the keypoints or display the result
+    try {
+// Preprocess the image using the HTML Canvas API
+const resizedImage = await resizeImage(imageSrc, 800, 600);
+
+const formData = new FormData();
+formData.append('personName', name);
+formData.append('image', resizedImage, { filename: 'image.jpg' });
+
+
+      const response = await axios.post('http://localhost:5001/api/facedetect', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+
+      // Handle the response from the API
+      setAppreance(response.data)
+      console.log(response.data); // Logging the response data for testing
+
     } catch (error) {
-      console.error(error);
+      console.error('Error uploading image:', error);
     }
   };
+
+ 
 
   return (
     <center>
-      <div className="button-container">
+  
+
+      <div >
+    
+    
+      
+      {capturedImage ? (
+        <div>
+            <div className="button-container">
         <h2>Face Detection App</h2>
-      <button className="cool-button" onClick={startRecording}>
-          Start Recording
-        </button>
-        <button className="cool-button2" onClick={stopRecording}>
-         Detect Face
-        </button>
+   
         <button className="cool-button2" onClick={Tryagain}>
          Try again
         </button>
       </div>
-      <div className="App">
-    
-        <video
-          ref={videoRef}
-          style={{ display: "none" }}
-          width={640}
-          height={480}
-        />
-      
+      {Appreance==0? "": <h3>{Appreance}</h3> }
+          <img src={capturedImage} alt="Captured" />
+         
+         
+        </div>
+      ):( <div>    <div className="button-container">
+      <h2>Face Detection App</h2>
+      <button className="cool-button" onClick={() => handleImageUpload()}>Capture</button>
+    </div>
+<div className="input-container ">
+<label className="first-time-user">If you are a first time user, please add your name.</label>
 
-        <canvas ref={canvasRef} className="output_canvas"></canvas>
+        
+        <input
+          id="name-input"
+          type="text"
+          value={name}
+          onChange={handleNameChange}
+          placeholder="Enter your name"
+        />
+   
+</div>
+<div className="App">
+<Webcam audio={false} ref={webcamRef} />
+</div></div>)}
+
       </div>
-      {Appreance==0? "": <h3>How many times this face appear: {Appreance}</h3> }
+     
      
     </center>
   );
