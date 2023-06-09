@@ -7,9 +7,9 @@ let multer = require('multer');
 const upload = multer();
 //AWS access details
 AWS.config.update({
-    accessKeyId: 'AKIA2OLJ62BHZGSB6LAL',
-    secretAccessKey: '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',
-    region: 'ap-southeast-2'
+    accessKeyId: '',
+    secretAccessKey: '',
+    region: ''
 });
 
 const rekognition = new AWS.Rekognition();

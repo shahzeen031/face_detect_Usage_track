@@ -4,6 +4,16 @@ const app = express();
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const path = require('path');
+const faceapi = require("face-api.js");
+async function LoadModels() {
+    // Load the models
+    // __dirname gives the root directory of the server
+    await faceapi.nets.faceRecognitionNet.loadFromDisk(__dirname + "/weights");
+    await faceapi.nets.faceLandmark68Net.loadFromDisk(__dirname + "/weights");
+    await faceapi.nets.ssdMobilenetv1.loadFromDisk(__dirname + "/weights");
+  }
+  LoadModels();
+  
 
 //app.set('view engine', ejs);
 
@@ -23,7 +33,8 @@ app.use(bodyParser.json());
 
 //Define Routes
 // app.use('/api/user', require('./routes/api/user'));
-app.use('/api/facedetect', require('./routes/facedetect_aws'));
+//app.use('/api/facedetect', require('./routes/facedetect_aws'));
+app.use('/api/facedetectAPI', require('./routes/facedetect_faceapi'));
 //app.use('/api/face', require('./routes/facedetect'));
 
 // Serve static assets in production

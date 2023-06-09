@@ -2,10 +2,12 @@ import React, { useRef,useState } from "react";
 import Webcam from 'react-webcam';
 import axios from "axios";
 
-function App() {
 
+function App() {
+  const imageUrl = './output/faceDetection.jpg';
   const [Appreance, setAppreance] = useState('');
   const [capturedImage, setCapturedImage] = useState(null);
+  const [loading, setloading] = useState(false);
   const [name, setName] = useState('');
   const webcamRef = useRef(null);
 
@@ -52,12 +54,14 @@ function resizeImage(imageSrc, maxWidth, maxHeight) {
 }
   
   const Tryagain = async ()=>{
+    console.log('hello')
     window.location.reload(true)
+
   }
 
   const handleImageUpload = async () => {
     const imageSrc = await webcamRef.current.getScreenshot();
-
+   setloading(true)
    setCapturedImage(imageSrc);
    
     try {
@@ -70,7 +74,7 @@ formData.append('personName', name);
 formData.append('image', resizedImage, { filename: 'image.jpg' });
 
 
-      const response = await axios.post('http://localhost:5001/api/facedetect', formData, {
+      const response = await axios.post('http://localhost:5001/api/facedetectAPI', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
@@ -79,7 +83,7 @@ formData.append('image', resizedImage, { filename: 'image.jpg' });
       // Handle the response from the API
       setAppreance(response.data)
       console.log(response.data); // Logging the response data for testing
-
+      setloading(false)
     } catch (error) {
       console.error('Error uploading image:', error);
     }
@@ -89,43 +93,33 @@ formData.append('image', resizedImage, { filename: 'image.jpg' });
 
   return (
     <center>
-  
-
-      <div >
-    
-    
-      
+      <div >  
       {capturedImage ? (
         <div>
             <div className="button-container">
+
         <h2>Face Detection App</h2>
+         {loading?"":( <div className="button-container">
+        
    
-        <button className="cool-button2" onClick={Tryagain}>
+        <button className="cool-button2"onClick={() => Tryagain()}>
          Try again
         </button>
+      </div>)}
+        
       </div>
-      {Appreance==0? "": <h3>{Appreance}</h3> }
-          <img src={capturedImage} alt="Captured" />
-         
+      {loading?<h2>loading....</h2>: (<div> <img src={imageUrl} width={600} size={400} alt="Captured" ></img>
+      
+           
+      </div>)}
+   
          
         </div>
       ):( <div>    <div className="button-container">
       <h2>Face Detection App</h2>
       <button className="cool-button" onClick={() => handleImageUpload()}>Capture</button>
     </div>
-<div className="input-container ">
-<label className="first-time-user">If you are a first time user, please add your name.</label>
 
-        
-        <input
-          id="name-input"
-          type="text"
-          value={name}
-          onChange={handleNameChange}
-          placeholder="Enter your name"
-        />
-   
-</div>
 <div className="App">
 <Webcam audio={false} ref={webcamRef} />
 </div></div>)}
