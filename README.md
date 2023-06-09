@@ -75,11 +75,11 @@ The frontend server should now be running on `http://localhost:300`, and the app
 
 3. The application will display a live video feed from your webcam.
 
-4. The MediaPipe library will extract facial keypoints from the video feed and display them on the screen.
+4. If you are a first time user enter your name and then press detect
 
-5. The application will use the Euclidean distance algorithm to compare the extracted face keypoints to the keypoints stored in the MongoDB database.
+5. The application will use amazon rekogination to detect face.
 
-6. If the similarity between the keypoints and any existing keypoints in the database is above 0.6, the face frequency count will be increased for that specific face in the database. Otherwise, new face keypoints will be added to the database.
+6. If the similarity between the face is found, the face frequency count will be increased for that specific face in the database. Otherwise, new face  will be added to the database.
 
 Note:
 
@@ -87,16 +87,7 @@ Note:
 2. Record the front face to get the best results.
 3. Avoid unnecessary movements during the recording process for better accuracy.
 
-## Euclidean Distance Algorithm
-The Euclidean distance algorithm is used in the Face Mash App to measure the similarity between face keypoints. It calculates the straight-line distance between two sets of coordinates in a multi-dimensional space.
-
-In the context of the Face Mash App, the algorithm computes the Euclidean distance between the keypoints extracted from the webcam video feed and the keypoints stored in the MongoDB database. If the distance is below a certain threshold (0.6 in this case), the keypoints are considered similar.
-
-The Euclidean distance between two points (x1, y1) and (x2, y2) in a two-dimensional space is calculated as follows:
-
-```
-distance = sqrt((x2 - x1)^2 + (y2 - y1)^2)
-```
+`
 
 ## Contributing
 Contributions to the Face Mash App are welcome! If you encounter any issues or would like to add new features, please submit a pull request on GitHub.
