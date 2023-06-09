@@ -1,6 +1,6 @@
 const fs = require('fs');
 const path = require('path');
-const baseDir = path.resolve(__dirname, '../my-app/src/output');
+const baseDir = path.resolve(__dirname, '../out');
 const saveFile = async (fileName, buf) => {
 
     if (!fs.existsSync(baseDir)) {

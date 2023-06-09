@@ -35,6 +35,7 @@ app.use(bodyParser.json());
 // app.use('/api/user', require('./routes/api/user'));
 //app.use('/api/facedetect', require('./routes/facedetect_aws'));
 app.use('/api/facedetectAPI', require('./routes/facedetect_faceapi'));
+app.use('/out', express.static('out'));
 //app.use('/api/face', require('./routes/facedetect'));
 
 // Serve static assets in production

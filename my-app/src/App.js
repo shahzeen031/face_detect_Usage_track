@@ -4,7 +4,7 @@ import axios from "axios";
 
 
 function App() {
-  const imageUrl = './output/faceDetection.jpg';
+  const imageUrl = 'http://localhost:5001/out/faceDetection.jpg';
   const [Appreance, setAppreance] = useState('');
   const [capturedImage, setCapturedImage] = useState(null);
   const [loading, setloading] = useState(false);
@@ -118,6 +118,7 @@ formData.append('image', resizedImage, { filename: 'image.jpg' });
       ):( <div>    <div className="button-container">
       <h2>Face Detection App</h2>
       <button className="cool-button" onClick={() => handleImageUpload()}>Capture</button>
+   
     </div>
 
 <div className="App">
