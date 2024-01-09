@@ -3,7 +3,7 @@
 
 
 ## Overview
-The Face Mash App is a single-page application that utilizes the MediaPipe library to extract 468 facial features from webcam. It provides a React frontend interface for capturing face keypoints and Node.js backend for comparing them to the keypoints stored in a MongoDB database.
+The Face Mash App is a single-page application that utilizes the Face API Library to extract features from webcam. It provides a React frontend interface for capturing face keypoints and Node.js backend for comparing them to the keypoints stored in a MongoDB database.
 
 ## Prerequisites
 To run the Face Mash App, ensure that you have the following prerequisites installed on your system:
@@ -98,6 +98,6 @@ This project is licensed under the [MIT License](https://opensource.org/licenses
 ## Acknowledgements
 The Face Mash App is built upon the following technologies and libraries:
 
-- MediaPipe: [https://mediapipe.dev/](https://mediapipe.dev/)
+
 - React: [https://reactjs.org/](https://reactjs.org/)
 - Node.js: [https://nodejs.org/](https://nodejs.org/)
